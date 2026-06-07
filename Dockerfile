@@ -1,27 +1,26 @@
-# Use Node.js 18 as base image
 FROM node:18-bullseye
 
-# Install Python and pip
-RUN apt-get update && apt-get install -y python3 python3-pip wget unzip && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip wget unzip ffmpeg build-essential libvips-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and install Node dependencies
+# COPY first (better cache control)
 COPY package*.json ./
-RUN npm install
 
-# Install Python dependencies (vosk)
-RUN pip3 install vosk
+# FORCE clean install (IMPORTANT)
+RUN npm cache clean --force && npm install
 
-# Download and extract Vosk model
-RUN mkdir -p models && wget https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip && unzip vosk-model-small-en-us-0.15.zip -d models/ && rm vosk-model-small-en-us-0.15.zip
+RUN pip3 install --no-cache-dir vosk
 
-# Copy the rest of the application code
+RUN mkdir -p models && \
+    wget https://alphacephei.com/vosk/models/vo.15.zip && \
+    unzip vosk-model-small-en-us-0.15.zip -d models/ && \
+    rm vosk-model-small-en-us-0.15.zip
+
 COPY . .
 
-# Expose the voice service port
 EXPOSE 5000
 
-# Start the application
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
