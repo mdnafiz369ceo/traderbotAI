@@ -1,0 +1,2 @@
+- [Voice encryption fix](voice-encryption.md) — @discordjs/voice 0.18 uses await import() which returns {default: module} for CJS libs; use @stablelib/xchacha20poly1305 (ESM-native, exports named directly on lib).
+- [Voice state machine](voice-state-machine.md) — Never call configureNetworking() manually; the library auto-calls it via addServerPacket() on VOICE_SERVER_UPDATE. Manual call creates a racing second Networking instance.
