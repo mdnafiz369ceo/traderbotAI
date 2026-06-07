@@ -6,11 +6,12 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# COPY first (better cache control)
 COPY package*.json ./
 
-# FORCE clean install (IMPORTANT)
-RUN npm cache clean --force && npm install
+# CLEAN & SAFE install (VERY IMPORTANT)
+RUN npm cache clean --force
+RUN rm -rf node_modules || true
+RUN npm install --force
 
 RUN pip3 install --no-cache-dir vosk
 
