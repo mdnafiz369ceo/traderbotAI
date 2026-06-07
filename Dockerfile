@@ -8,10 +8,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# CLEAN & SAFE install (VERY IMPORTANT)
-RUN npm cache clean --force
-RUN rm -rf node_modules || true
-RUN npm install --force
+RUN npm install --legacy-peer-deps
 
 RUN pip3 install --no-cache-dir vosk
 
@@ -25,3 +22,4 @@ COPY . .
 EXPOSE 5000
 
 CMD ["node", "index.js"]
+
