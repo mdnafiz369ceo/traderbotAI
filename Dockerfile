@@ -16,7 +16,7 @@ RUN npm install --force
 RUN pip3 install --no-cache-dir vosk
 
 RUN mkdir -p models && \
-    wget https://alphacephei.com/vosk/models/vo.15.zip && \
+    wget https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip && \
     unzip vosk-model-small-en-us-0.15.zip -d models/ && \
     rm vosk-model-small-en-us-0.15.zip
 
